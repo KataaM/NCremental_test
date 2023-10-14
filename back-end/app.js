@@ -94,25 +94,28 @@ let getDestinationContent = async (touristicDestination) => {
 };
 
 let getImage = async (generatedJson) => {
-  generatedJson.rental_properties.forEach(async (property) => {
-    try {
-      const image = await openai.images.generate({
-        prompt: property.name,
-        n: 1,
-        size: "1024x1024",
-      });
+  const imagePromises = generatedJson.rental_properties.map(
+    async (property) => {
+      try {
+        const image = await openai.images.generate({
+          prompt: property.name,
+          n: 1,
+          size: "1024x1024",
+        });
 
-      console.log("image.data[0].url :  " + image.data[0].url);
-      property.image = image.data[0].url;
-    } catch (err) {
-      if (err.response) {
-        console.log(err.response.status);
-        console.log(err.response.data);
-      } else {
-        console.log(err.message);
+        property.image = image.data[0].url;
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.status);
+          console.log(err.response.data);
+        } else {
+          console.log(err.message);
+        }
       }
     }
-  });
+  );
+
+  await Promise.all(imagePromises);
 
   return generatedJson;
 };
@@ -133,11 +136,8 @@ app.get("*", (req, res) => {
   // Call getDestinationContent and handle the response
   getDestinationContent(requestedDestination)
     .then(async (destinationContent) => {
-      console.log(destinationContent);
-
       await getImage(destinationContent)
         .then((destinationContent) => {
-          console.log(destinationContent);
           // Send the content back as a JSON response
           res.json(destinationContent);
         })
