@@ -9,6 +9,8 @@
   "author": "gfazzino",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "openai": "^4.12.1"
   }
 }
