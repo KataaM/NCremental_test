@@ -13,17 +13,16 @@
     }"
     :pagination="true"
     :modules="modules"
-    class="mySwiper"
+    class="PropertiesSwiper"
   >
-    <swiper-slide><img src="https://swiperjs.com/demos/images/nature-1.jpg" /></swiper-slide
-    ><swiper-slide><img src="https://swiperjs.com/demos/images/nature-2.jpg" /></swiper-slide
-    ><swiper-slide><img src="https://swiperjs.com/demos/images/nature-3.jpg" /></swiper-slide
-    ><swiper-slide><img src="https://swiperjs.com/demos/images/nature-4.jpg" /></swiper-slide
-    ><swiper-slide><img src="https://swiperjs.com/demos/images/nature-5.jpg" /></swiper-slide
-    ><swiper-slide><img src="https://swiperjs.com/demos/images/nature-6.jpg" /></swiper-slide
-    ><swiper-slide><img src="https://swiperjs.com/demos/images/nature-7.jpg" /></swiper-slide
-    ><swiper-slide><img src="https://swiperjs.com/demos/images/nature-8.jpg" /></swiper-slide
-    ><swiper-slide><img src="https://swiperjs.com/demos/images/nature-9.jpg" /></swiper-slide>
+    <swiper-slide v-for="(property, index) in properties" :key="index">
+      <div class="property-info">
+        <img :src="property.image" alt="Property Image" class="rounded-image" />
+        <h2>{{ property.name }}</h2>
+        <p>${{ property.price_per_night }} night</p>
+        <p>Rating: {{ property.rate }}/5</p>
+      </div>
+    </swiper-slide>
   </swiper>
 </template>
 <script>
@@ -43,6 +42,9 @@ export default {
   components: {
     Swiper,
     SwiperSlide
+  },
+  props: {
+    properties: Array
   },
   setup() {
     return {
@@ -68,8 +70,7 @@ body {
 
 .swiper {
   width: 100%;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding-bottom: 160px;
 }
 
 .swiper-slide {
@@ -82,5 +83,15 @@ body {
 .swiper-slide img {
   display: block;
   width: 100%;
+}
+
+.property-info {
+  text-align: center;
+}
+
+.rounded-image {
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
 }
 </style>

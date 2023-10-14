@@ -2,7 +2,7 @@
   <div class="search-banner">
     <div class="search-card">
       <div class="search-input">
-        <input type="text" placeholder="Search for a city" />
+        <input v-model="searchText" type="text" placeholder="Search for a city" />
         <button @click="search" class="search-button">Search</button>
       </div>
     </div>
@@ -11,9 +11,14 @@
 
 <script>
 export default {
+  data() {
+    return {
+      searchText: ''
+    }
+  },
   methods: {
     search() {
-      this.$emit('search-clicked')
+      this.$emit('search-clicked', this.searchText)
     }
   }
 }
@@ -22,7 +27,7 @@ export default {
 <style scoped>
 .search-banner {
   text-align: center;
-  padding: 80px 0;
+  padding: 30px 0;
 }
 
 .search-card {

@@ -1,10 +1,14 @@
 <script setup>
 import PropertiesSwiper from './components/PropertiesSwiper.vue'
-import SearchBanner from './components/SearchBanner.vue'
+import SearchBar from './components/SearchBar.vue'
 </script>
 
 <script>
 export default {
+  components: {
+    PropertiesSwiper: PropertiesSwiper,
+    SearchBar: SearchBar
+  },
   data() {
     return {
       images: [
@@ -20,33 +24,39 @@ export default {
             name: 'Cozy Cabin Retreat',
             rate: 4.8,
             price_per_night: 120.0,
-            available_dates: ['2023-12-15', '2023-12-16', '2023-12-17']
+            available_dates: ['2023-12-15', '2023-12-16', '2023-12-17'],
+            image: 'https://swiperjs.com/demos/images/nature-1.jpg'
           },
           {
             name: 'Seaside Villa',
             rate: 4.9,
             price_per_night: 250.0,
-            available_dates: ['2023-12-20', '2023-12-21', '2023-12-22']
+            available_dates: ['2023-12-20', '2023-12-21', '2023-12-22'],
+            image: 'https://swiperjs.com/demos/images/nature-1.jpg'
           },
           {
             name: 'Mountain Chalet',
             rate: 4.5,
             price_per_night: 160.0,
-            available_dates: ['2023-12-18', '2023-12-19', '2023-12-20']
+            available_dates: ['2023-12-18', '2023-12-19', '2023-12-20'],
+            image: 'https://swiperjs.com/demos/images/nature-1.jpg'
           }
         ]
       }
     }
   },
   methods: {
-    fetchData() {
-      console.log('FETCH DATA CALLED')
-      fetch('http://localhost:3000/montreal', {
+    fetchData(searchText) {
+      fetch('http://localhost:3000/' + searchText, {
         method: 'GET',
         headers: {}
       })
         .then((response) => {
-          response.json().then((res) => console.log(res))
+          response.json().then((res) => {
+            this.destinationData.title = res.title
+            this.destinationData.description = res.description
+            this.destinationData.rental_properties = res.rental_properties
+          })
         })
         .catch((err) => {
           console.error(err)
@@ -54,7 +64,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchData()
+    // this.fetchData('Montreal')
   }
 }
 // import { RouterLink, RouterView } from 'vue-router'
@@ -69,15 +79,13 @@ export default {
       </nav>
     </div> -->
 
-    <SearchBanner @search-clicked="fetchData" />
+    <SearchBar @search-clicked="fetchData" />
     <div class="container">
       <h1>{{ destinationData.title }}</h1>
       <p>
         {{ destinationData.description }}
       </p>
-      <PropertiesSwiper />
-
-      <button @click="fetchData">Click Me!</button>
+      <PropertiesSwiper :properties="destinationData.rental_properties" />
     </div>
   </header>
 </template>
