@@ -23,6 +23,36 @@ const jsonSchema = {
       type: "string",
       description: "Descriptive description the destination",
     },
+    rental_properties: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+            description: "The attractive name of the rental property.",
+          },
+          rate: {
+            type: "number",
+            description:
+              "The rate or rating of the rental property (e.g., out of 5).",
+          },
+          price_per_night: {
+            type: "number",
+            description: "The price per night for renting the property.",
+          },
+          available_dates: {
+            type: "array",
+            items: {
+              type: "string",
+              format: "date",
+              description: "Dates when the property is available for rent.",
+            },
+          },
+        },
+        required: ["name", "rate", "price_per_night", "available_dates"],
+      },
+    },
   },
 };
 
@@ -31,7 +61,8 @@ let getDestinationContent = async (touristicDestination) => {
   try {
     const contentMessage = `May you describe ${touristicDestination} with : -a title.\
     The title will be used for SEO and should be generated to match the Search engine title restrictions.\
-     - a description. The description should be generated for the specific touristic destination and should advertise the available rental properties.!`;
+     - a description. The description should be generated for the specific touristic destination \
+     Also  you could fill the rental_properties array with generated rental properties : attractive name, rate number out of 5 (generally close to 5), price per night, and available dates (2024)`;
 
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-4",
